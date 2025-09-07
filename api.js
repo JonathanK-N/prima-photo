@@ -1,5 +1,5 @@
 // API Flask backend
-const API_BASE_URL = 'VOTRE-URL-ICI/api';
+const API_BASE_URL = 'http://localhost:5000/api';
 
 class PortfolioAPI {
     async getData(section) {

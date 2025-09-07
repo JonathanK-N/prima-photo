@@ -2,7 +2,7 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "cd backend && python app.py"
+startCommand = "python3 main.py"
 restartPolicyType = "always"
 
 [env]
