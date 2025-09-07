@@ -100,6 +100,14 @@ def add_photo():
     conn.close()
     return jsonify({'success': True})
 
+@app.route('/', methods=['GET'])
+def health_check():
+    return jsonify({'status': 'API is running', 'message': 'Prima Photo Backend'})
+
+@app.route('/api/health', methods=['GET'])
+def api_health():
+    return jsonify({'status': 'OK', 'api': 'Prima Photo API v1.0'})
+
 if __name__ == '__main__':
     init_db()
     port = int(os.environ.get('PORT', 5000))
