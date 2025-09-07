@@ -1,5 +1,5 @@
 // API Flask backend
-const API_BASE_URL = 'https://prima-photo-backend.up.railway.app/api';
+const API_BASE_URL = 'VOTRE-URL-ICI/api';
 
 class PortfolioAPI {
     async getData(section) {
