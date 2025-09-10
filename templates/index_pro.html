@@ -112,9 +112,9 @@
                 <h3>Portraits</h3>
                 <p>Séances portrait professionnelles en studio ou en extérieur. Mise en valeur de votre personnalité avec un style unique et intemporel.</p>
                 <div class="service-price">À partir de 200€</div>
-                <a href="https://wa.me/15141234567?text=Bonjour%20Prima%20Photo%2C%0A%0AService%3A%20Portraits%0A%0AJe%20souhaite%20réserver%20le%20service%20Portraits.%20Pouvez-vous%20me%20donner%20plus%20d%27informations%20sur%20vos%20disponibilités%20et%20tarifs%20%3F%0A%0ACordialement" target="_blank" class="service-btn">
+                <button class="service-btn" onclick="openWhatsApp('Portraits')">
                     Réserver
-                </a>
+                </button>
             </div>
             <div class="service-card">
                 <div class="service-icon">
@@ -123,9 +123,9 @@
                 <h3>Mariages</h3>
                 <p>Couverture complète de votre mariage avec un reportage discret et artistique. Immortalisation de chaque émotion de votre jour J.</p>
                 <div class="service-price">À partir de 1200€</div>
-                <a href="https://wa.me/15141234567?text=Bonjour%20Prima%20Photo%2C%0A%0AService%3A%20Mariages%0A%0AJe%20souhaite%20réserver%20le%20service%20Mariages.%20Pouvez-vous%20me%20donner%20plus%20d%27informations%20sur%20vos%20disponibilités%20et%20tarifs%20%3F%0A%0ACordialement" target="_blank" class="service-btn">
+                <button class="service-btn" onclick="openWhatsApp('Mariages')">
                     Réserver
-                </a>
+                </button>
             </div>
             <div class="service-card">
                 <div class="service-icon">
@@ -134,9 +134,9 @@
                 <h3>Événements</h3>
                 <p>Reportage photo pour vos événements d'entreprise, anniversaires, baptêmes. Couverture professionnelle adaptée à chaque occasion.</p>
                 <div class="service-price">À partir de 400€</div>
-                <a href="https://wa.me/15141234567?text=Bonjour%20Prima%20Photo%2C%0A%0AService%3A%20Événements%0A%0AJe%20souhaite%20réserver%20le%20service%20Événements.%20Pouvez-vous%20me%20donner%20plus%20d%27informations%20sur%20vos%20disponibilités%20et%20tarifs%20%3F%0A%0ACordialement" target="_blank" class="service-btn">
+                <button class="service-btn" onclick="openWhatsApp('Événements')">
                     Réserver
-                </a>
+                </button>
             </div>
             <div class="service-card">
                 <div class="service-icon">
@@ -145,9 +145,9 @@
                 <h3>Famille</h3>
                 <p>Séances photo famille dans un cadre naturel et détendu. Capture des liens familiaux et des moments de complicité authentiques.</p>
                 <div class="service-price">À partir de 250€</div>
-                <a href="https://wa.me/15141234567?text=Bonjour%20Prima%20Photo%2C%0A%0AService%3A%20Famille%0A%0AJe%20souhaite%20réserver%20le%20service%20Famille.%20Pouvez-vous%20me%20donner%20plus%20d%27informations%20sur%20vos%20disponibilités%20et%20tarifs%20%3F%0A%0ACordialement" target="_blank" class="service-btn">
+                <button class="service-btn" onclick="openWhatsApp('Famille')">
                     Réserver
-                </a>
+                </button>
             </div>
             <div class="service-card">
                 <div class="service-icon">
@@ -156,9 +156,9 @@
                 <h3>Corporate</h3>
                 <p>Photos professionnelles pour entreprises, portraits corporate, événements d'entreprise. Valorisation de votre image de marque.</p>
                 <div class="service-price">À partir de 350€</div>
-                <a href="https://wa.me/15141234567?text=Bonjour%20Prima%20Photo%2C%0A%0AService%3A%20Corporate%0A%0AJe%20souhaite%20réserver%20le%20service%20Corporate.%20Pouvez-vous%20me%20donner%20plus%20d%27informations%20sur%20vos%20disponibilités%20et%20tarifs%20%3F%0A%0ACordialement" target="_blank" class="service-btn">
+                <button class="service-btn" onclick="openWhatsApp('Corporate')">
                     Réserver
-                </a>
+                </button>
             </div>
             <div class="service-card">
                 <div class="service-icon">
@@ -167,9 +167,9 @@
                 <h3>Remise de Diplômes</h3>
                 <p>Immortalisation de ce moment important avec des photos de qualité professionnelle. Souvenirs durables de votre réussite.</p>
                 <div class="service-price">À partir de 180€</div>
-                <a href="https://wa.me/15141234567?text=Bonjour%20Prima%20Photo%2C%0A%0AService%3A%20Remise%20de%20Diplômes%0A%0AJe%20souhaite%20réserver%20le%20service%20Remise%20de%20Diplômes.%20Pouvez-vous%20me%20donner%20plus%20d%27informations%20sur%20vos%20disponibilités%20et%20tarifs%20%3F%0A%0ACordialement" target="_blank" class="service-btn">
+                <button class="service-btn" onclick="openWhatsApp('Remise de Diplômes')">
                     Réserver
-                </a>
+                </button>
             </div>
         </div>
     </div>
@@ -384,11 +384,11 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     });
 });
 
-// Contact service function
-function contactService(service, message) {
+// WhatsApp function
+function openWhatsApp(service) {
     const whatsappNumber = '15141234567';
-    const fullMessage = `Bonjour Prima Photo,\n\nService: ${service}\n\n${message}\n\nCordialement`;
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(fullMessage)}`;
+    const message = `Bonjour Prima Photo,\n\nService: ${service}\n\nJe souhaite réserver le service ${service}. Pouvez-vous me donner plus d'informations sur vos disponibilités et tarifs ?\n\nCordialement`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 }
 
