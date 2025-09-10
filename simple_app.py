@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory, render_template_string
 from flask_cors import CORS
 import json
 import os
@@ -34,9 +34,28 @@ def save_photos(photos):
     with open(PHOTOS_FILE, 'w') as f:
         json.dump(photos, f)
 
-@app.route('/', methods=['GET'])
-def health_check():
-    return jsonify({'status': 'API is running', 'message': 'Prima Photo Backend'})
+@app.route('/')
+def index():
+    try:
+        with open('index.html', 'r', encoding='utf-8') as f:
+            return f.read()
+    except:
+        return jsonify({'status': 'API is running', 'message': 'Prima Photo Backend'})
+
+@app.route('/admin')
+def admin():
+    try:
+        with open('admin.html', 'r', encoding='utf-8') as f:
+            return f.read()
+    except:
+        return 'Admin page not found'
+
+@app.route('/<path:filename>')
+def static_files(filename):
+    try:
+        return send_from_directory('.', filename)
+    except:
+        return 'File not found', 404
 
 @app.route('/api/health', methods=['GET'])
 def api_health():
