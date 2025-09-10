@@ -105,76 +105,8 @@
     <div class="container">
         <h2 class="section-title serif">Mes Services</h2>
         <div class="services-grid">
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-                <h3>Portraits</h3>
-                <p>Séances portrait professionnelles en studio ou en extérieur. Mise en valeur de votre personnalité avec un style unique et intemporel.</p>
-                <div class="service-price">À partir de 200€</div>
-                <button class="service-btn" onclick="contactService('Portrait Professionnel', 'Je souhaite réserver une séance portrait. Pouvez-vous me donner plus d\'informations sur vos disponibilités et tarifs ?')">
-                    Réserver
-                </button>
-            </div>
-            
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="fas fa-heart"></i>
-                </div>
-                <h3>Mariages</h3>
-                <p>Couverture complète de votre mariage avec un reportage discret et artistique. Immortalisation de chaque émotion de votre jour J.</p>
-                <div class="service-price">À partir de 1200€</div>
-                <button class="service-btn" onclick="contactService('Mariage', 'Je souhaite connaître vos prestations mariage. Pouvez-vous m\'envoyer votre brochure et vos disponibilités ?')">
-                    Réserver
-                </button>
-            </div>
-            
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="fas fa-camera"></i>
-                </div>
-                <h3>Événements</h3>
-                <p>Reportage photo pour vos événements d'entreprise, anniversaires, baptêmes. Couverture professionnelle adaptée à chaque occasion.</p>
-                <div class="service-price">À partir de 400€</div>
-                <button class="service-btn" onclick="contactService('Événement', 'Je souhaite organiser un reportage photo pour un événement. Pouvez-vous me contacter pour discuter des détails ?')">
-                    Réserver
-                </button>
-            </div>
-            
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <h3>Famille</h3>
-                <p>Séances photo famille dans un cadre naturel et détendu. Capture des liens familiaux et des moments de complicité authentiques.</p>
-                <div class="service-price">À partir de 250€</div>
-                <button class="service-btn" onclick="contactService('Séance Famille', 'Je souhaite organiser une séance photo famille. Pouvez-vous me proposer des créneaux et lieux disponibles ?')">
-                    Réserver
-                </button>
-            </div>
-            
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="fas fa-briefcase"></i>
-                </div>
-                <h3>Corporate</h3>
-                <p>Photos professionnelles pour entreprises, portraits corporate, événements d'entreprise. Valorisation de votre image de marque.</p>
-                <div class="service-price">À partir de 350€</div>
-                <button class="service-btn" onclick="contactService('Corporate', 'Je représente une entreprise et nous cherchons un photographe professionnel. Pouvez-vous nous présenter vos services corporate ?')">
-                    Réserver
-                </button>
-            </div>
-            
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <h3>Remise de Diplômes</h3>
-                <p>Immortalisation de ce moment important avec des photos de qualité professionnelle. Souvenirs durables de votre réussite.</p>
-                <div class="service-price">À partir de 180€</div>
-                <button class="service-btn" onclick="contactService('Remise de Diplômes', 'Je souhaite immortaliser ma remise de diplômes. Quels sont vos forfaits disponibles ?')">
-                    Réserver
-                </button>
+            <div class="services-grid" id="servicesDisplay">
+                <!-- Services will be loaded dynamically -->
             </div>
         </div>
     </div>
@@ -309,6 +241,41 @@
 
 {% block extra_js %}
 <script>
+// Load services from content
+function loadServicesDisplay() {
+    // Default services if none saved
+    const defaultServices = [
+        { id: 1, name: 'Portraits', icon: 'fas fa-user-circle', description: 'Séances portrait professionnelles en studio ou en extérieur. Mise en valeur de votre personnalité avec un style unique et intemporel.', price: 'À partir de 200€' },
+        { id: 2, name: 'Mariages', icon: 'fas fa-heart', description: 'Couverture complète de votre mariage avec un reportage discret et artistique. Immortalisation de chaque émotion de votre jour J.', price: 'À partir de 1200€' },
+        { id: 3, name: 'Événements', icon: 'fas fa-camera', description: 'Reportage photo pour vos événements d\'entreprise, anniversaires, baptêmes. Couverture professionnelle adaptée à chaque occasion.', price: 'À partir de 400€' },
+        { id: 4, name: 'Famille', icon: 'fas fa-users', description: 'Séances photo famille dans un cadre naturel et détendu. Capture des liens familiaux et des moments de complicité authentiques.', price: 'À partir de 250€' },
+        { id: 5, name: 'Corporate', icon: 'fas fa-briefcase', description: 'Photos professionnelles pour entreprises, portraits corporate, événements d\'entreprise. Valorisation de votre image de marque.', price: 'À partir de 350€' },
+        { id: 6, name: 'Remise de Diplômes', icon: 'fas fa-graduation-cap', description: 'Immortalisation de ce moment important avec des photos de qualité professionnelle. Souvenirs durables de votre réussite.', price: 'À partir de 180€' }
+    ];
+    
+    const services = {{ content.services | tojsonhtml }} || defaultServices;
+    const servicesDisplay = document.getElementById('servicesDisplay');
+    
+    servicesDisplay.innerHTML = services.map(service => `
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="${service.icon}"></i>
+            </div>
+            <h3>${service.name}</h3>
+            <p>${service.description}</p>
+            <div class="service-price">${service.price}</div>
+            <button class="service-btn" onclick="contactService('${service.name}', 'Je souhaite réserver le service ${service.name}. Pouvez-vous me donner plus d\'informations sur vos disponibilités et tarifs ?')">
+                Réserver
+            </button>
+        </div>
+    `).join('');
+}
+
+// Load services on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadServicesDisplay();
+});
+
 // Gallery filters
 document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {

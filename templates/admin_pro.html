@@ -331,6 +331,76 @@
             gap: 20px;
         }
 
+        .service-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .service-item h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .service-item p {
+            color: #64748b;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .service-price {
+            font-weight: 600;
+            color: #3b82f6;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .service-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-edit {
+            background: #f59e0b;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .edit-form {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
         .loading {
             display: inline-flex;
             align-items: center;
@@ -405,6 +475,9 @@
             </button>
             <button class="tab" onclick="showTab('contact')">
                 <i class="fas fa-envelope"></i> Contact
+            </button>
+            <button class="tab" onclick="showTab('services')">
+                <i class="fas fa-briefcase"></i> Services
             </button>
             <button class="tab" onclick="showTab('social')">
                 <i class="fas fa-share-alt"></i> Réseaux Sociaux
@@ -601,6 +674,47 @@
                     <i class="fas fa-save"></i> Sauvegarder Contact
                 </button>
             </form>
+        </div>
+
+        <!-- Services Tab -->
+        <div id="services" class="tab-content">
+            <h2 class="section-title">
+                <i class="fas fa-briefcase"></i> Gestion des Services
+            </h2>
+            
+            <div id="servicesList"></div>
+            
+            <div style="margin-top: 30px; padding-top: 30px; border-top: 1px solid #e5e7eb;">
+                <h3 style="margin-bottom: 20px; color: #1e293b;"><i class="fas fa-plus"></i> Ajouter un Nouveau Service</h3>
+                
+                <form id="addServiceForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="serviceName">Nom du Service</label>
+                            <input type="text" id="serviceName" placeholder="Ex: Portrait Corporate" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="serviceIcon">Icône (FontAwesome)</label>
+                            <input type="text" id="serviceIcon" placeholder="fas fa-user" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="servicePrice">Prix</label>
+                            <input type="text" id="servicePrice" placeholder="À partir de 200€" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serviceDescription">Description</label>
+                        <textarea id="serviceDescription" placeholder="Décrivez ce service en détail..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Ajouter le Service
+                    </button>
+                </form>
+            </div>
         </div>
 
         <!-- Social Tab -->
@@ -913,6 +1027,154 @@
                 whatsapp: document.getElementById('whatsappNumber').value
             };
             saveContent('contact', data);
+        });
+
+        // Services management
+        let services = [
+            {
+                id: 1,
+                name: 'Portraits',
+                icon: 'fas fa-user-circle',
+                description: 'Séances portrait professionnelles en studio ou en extérieur. Mise en valeur de votre personnalité avec un style unique et intemporel.',
+                price: 'À partir de 200€'
+            },
+            {
+                id: 2,
+                name: 'Mariages',
+                icon: 'fas fa-heart',
+                description: 'Couverture complète de votre mariage avec un reportage discret et artistique. Immortalisation de chaque émotion de votre jour J.',
+                price: 'À partir de 1200€'
+            },
+            {
+                id: 3,
+                name: 'Événements',
+                icon: 'fas fa-camera',
+                description: 'Reportage photo pour vos événements d\'entreprise, anniversaires, baptêmes. Couverture professionnelle adaptée à chaque occasion.',
+                price: 'À partir de 400€'
+            },
+            {
+                id: 4,
+                name: 'Famille',
+                icon: 'fas fa-users',
+                description: 'Séances photo famille dans un cadre naturel et détendu. Capture des liens familiaux et des moments de complicité authentiques.',
+                price: 'À partir de 250€'
+            },
+            {
+                id: 5,
+                name: 'Corporate',
+                icon: 'fas fa-briefcase',
+                description: 'Photos professionnelles pour entreprises, portraits corporate, événements d\'entreprise. Valorisation de votre image de marque.',
+                price: 'À partir de 350€'
+            },
+            {
+                id: 6,
+                name: 'Remise de Diplômes',
+                icon: 'fas fa-graduation-cap',
+                description: 'Immortalisation de ce moment important avec des photos de qualité professionnelle. Souvenirs durables de votre réussite.',
+                price: 'À partir de 180€'
+            }
+        ];
+
+        function loadServices() {
+            const servicesList = document.getElementById('servicesList');
+            servicesList.innerHTML = services.map(service => `
+                <div class="service-item" data-id="${service.id}">
+                    <h4><i class="${service.icon}"></i> ${service.name}</h4>
+                    <p>${service.description}</p>
+                    <div class="service-price">${service.price}</div>
+                    <div class="service-actions">
+                        <button class="btn-edit" onclick="editService(${service.id})">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                        <button class="btn-delete" onclick="deleteService(${service.id})">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                    <div class="edit-form" id="editForm${service.id}">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Nom du Service</label>
+                                <input type="text" id="editName${service.id}" value="${service.name}">
+                            </div>
+                            <div class="form-group">
+                                <label>Icône</label>
+                                <input type="text" id="editIcon${service.id}" value="${service.icon}">
+                            </div>
+                            <div class="form-group">
+                                <label>Prix</label>
+                                <input type="text" id="editPrice${service.id}" value="${service.price}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="editDescription${service.id}">${service.description}</textarea>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button class="btn btn-success" onclick="saveService(${service.id})">
+                                <i class="fas fa-save"></i> Sauvegarder
+                            </button>
+                            <button class="btn btn-secondary" onclick="cancelEdit(${service.id})">
+                                <i class="fas fa-times"></i> Annuler
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editService(id) {
+            document.getElementById(`editForm${id}`).style.display = 'block';
+        }
+
+        function cancelEdit(id) {
+            document.getElementById(`editForm${id}`).style.display = 'none';
+        }
+
+        function saveService(id) {
+            const service = services.find(s => s.id === id);
+            service.name = document.getElementById(`editName${id}`).value;
+            service.icon = document.getElementById(`editIcon${id}`).value;
+            service.price = document.getElementById(`editPrice${id}`).value;
+            service.description = document.getElementById(`editDescription${id}`).value;
+            
+            saveContent('services', services);
+            loadServices();
+            showAlert('Service modifié avec succès !', 'success');
+        }
+
+        function deleteService(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce service ?')) {
+                services = services.filter(s => s.id !== id);
+                saveContent('services', services);
+                loadServices();
+                showAlert('Service supprimé avec succès !', 'success');
+            }
+        }
+
+        // Add service form
+        document.getElementById('addServiceForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const newService = {
+                id: Math.max(...services.map(s => s.id)) + 1,
+                name: document.getElementById('serviceName').value,
+                icon: document.getElementById('serviceIcon').value,
+                description: document.getElementById('serviceDescription').value,
+                price: document.getElementById('servicePrice').value
+            };
+            
+            services.push(newService);
+            saveContent('services', services);
+            loadServices();
+            
+            // Reset form
+            document.getElementById('addServiceForm').reset();
+            showAlert('Service ajouté avec succès !', 'success');
+        });
+
+        // Load services on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadServices();
         });
 
         // Social form
