@@ -733,15 +733,23 @@
                     body: formData
                 });
                 
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const result = await response.json();
                 
                 if (result.success) {
                     showAlert('Contenu sauvegardé avec succès !', 'success');
                 } else {
-                    showAlert('Erreur lors de la sauvegarde', 'error');
+                    const errorMsg = result.error || 'Erreur inconnue';
+                    showAlert('Erreur lors de la sauvegarde: ' + errorMsg, 'error');
+                    throw new Error(errorMsg);
                 }
             } catch (error) {
-                showAlert('Erreur lors de la sauvegarde', 'error');
+                console.error('Erreur saveContent:', error);
+                showAlert('Erreur lors de la sauvegarde: ' + error.message, 'error');
+                throw error;
             }
         }
 
@@ -792,22 +800,37 @@
         }
 
         // About form
-        document.getElementById('aboutForm').addEventListener('submit', (e) => {
+        document.getElementById('aboutForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const aboutImage = aboutImagePreview.querySelector('img');
-            const data = {
-                title: document.getElementById('aboutTitle').value,
-                paragraph1: document.getElementById('aboutPara1').value,
-                paragraph2: document.getElementById('aboutPara2').value,
-                stat1_number: document.getElementById('stat1Number').value,
-                stat1_label: document.getElementById('stat1Label').value,
-                stat2_number: document.getElementById('stat2Number').value,
-                stat2_label: document.getElementById('stat2Label').value,
-                stat3_number: document.getElementById('stat3Number').value,
-                stat3_label: document.getElementById('stat3Label').value,
-                image: aboutImage ? aboutImage.src : null
-            };
-            saveContent('about', data);
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<div class="loading"><div class="spinner"></div> Sauvegarde...</div>';
+            submitBtn.disabled = true;
+            
+            try {
+                const aboutImage = aboutImagePreview.querySelector('img');
+                const data = {
+                    title: document.getElementById('aboutTitle').value,
+                    paragraph1: document.getElementById('aboutPara1').value,
+                    paragraph2: document.getElementById('aboutPara2').value,
+                    stat1_number: document.getElementById('stat1Number').value,
+                    stat1_label: document.getElementById('stat1Label').value,
+                    stat2_number: document.getElementById('stat2Number').value,
+                    stat2_label: document.getElementById('stat2Label').value,
+                    stat3_number: document.getElementById('stat3Number').value,
+                    stat3_label: document.getElementById('stat3Label').value,
+                    image: aboutImage ? aboutImage.src : null
+                };
+                
+                await saveContent('about', data);
+            } catch (error) {
+                console.error('Erreur:', error);
+                showAlert('Erreur lors de la sauvegarde: ' + error.message, 'error');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
         });
 
         // Contact form

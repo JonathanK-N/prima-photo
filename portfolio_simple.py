@@ -122,14 +122,17 @@ def save_content_route():
     if 'admin_logged_in' not in session:
         return jsonify({'success': False})
     
-    content = load_content()
-    section = request.form['section']
-    data = json.loads(request.form['data'])
-    
-    content[section] = data
-    save_content(content)
-    
-    return jsonify({'success': True})
+    try:
+        content = load_content()
+        section = request.form['section']
+        data = json.loads(request.form['data'])
+        
+        content[section] = data
+        save_content(content)
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
