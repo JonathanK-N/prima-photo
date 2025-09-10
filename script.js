@@ -380,6 +380,9 @@ async function loadDataFromAPI() {
         const about = await portfolioAPI.getData('about');
         const services = await portfolioAPI.getData('services');
         const contact = await portfolioAPI.getData('contact');
+        if (contact) {
+            localStorage.setItem('portfolioContact', JSON.stringify(contact));
+        }
         const photos = await portfolioAPI.getPhotos();
         
         const data = { hero, about, services, contact, photos };
@@ -472,12 +475,24 @@ window.addEventListener('storage', function(e) {
 
 // Fonction de réservation WhatsApp
 function reserveService(serviceType) {
-    const contact = JSON.parse(localStorage.getItem('portfolioContact'));
-    const whatsappNumber = contact?.whatsapp;
-    
+    let whatsappNumber = null;
+    const storedContactRaw = localStorage.getItem('portfolioContact');
+    if (storedContactRaw) {
+        try {
+            const storedContact = JSON.parse(storedContactRaw);
+            whatsappNumber = storedContact?.whatsapp;
+        } catch (e) {
+            whatsappNumber = null;
+        }
+    }
+
     if (!whatsappNumber) {
-        alert('Numéro WhatsApp non configuré. Contactez l\'administrateur.');
-        return;
+        const dbContact = simpleDB.get('contact');
+        whatsappNumber = dbContact?.whatsapp;
+    }
+
+    if (!whatsappNumber) {
+        whatsappNumber = '33123456789';
     }
     
     const serviceNames = {
