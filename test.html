@@ -1,109 +1,21 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Portfolio</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
-        .success { color: green; }
-        .error { color: red; }
-        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
-    </style>
+    <title>Test WhatsApp</title>
 </head>
 <body>
-    <h1>🧪 Test Portfolio Prima Photo</h1>
+    <h1>Test des liens WhatsApp</h1>
     
-    <div class="test-section">
-        <h2>Test 1: Chargement des fichiers</h2>
-        <div id="files-test">
-            <p>✅ HTML chargé</p>
-            <p id="css-test">⏳ Test CSS...</p>
-            <p id="js-test">⏳ Test JavaScript...</p>
-        </div>
-    </div>
+    <p>Test 1 - Lien simple:</p>
+    <a href="https://wa.me/+15141234567" target="_blank">Ouvrir WhatsApp</a>
     
-    <div class="test-section">
-        <h2>Test 2: IndexedDB</h2>
-        <div id="indexeddb-test">⏳ Test IndexedDB...</div>
-        <button onclick="testIndexedDB()">Tester IndexedDB</button>
-    </div>
+    <p>Test 2 - Avec message:</p>
+    <a href="https://wa.me/+15141234567?text=Bonjour" target="_blank">WhatsApp avec message</a>
     
-    <div class="test-section">
-        <h2>Test 3: LocalStorage</h2>
-        <div id="localstorage-test">⏳ Test LocalStorage...</div>
-        <button onclick="testLocalStorage()">Tester LocalStorage</button>
-    </div>
+    <p>Test 3 - Bouton avec onclick:</p>
+    <button onclick="window.open('https://wa.me/+15141234567', '_blank')">Bouton WhatsApp</button>
     
-    <div class="test-section">
-        <h2>Test 4: Navigation</h2>
-        <button onclick="window.open('index.html', '_blank')">Ouvrir Portfolio</button>
-        <button onclick="window.open('admin.html', '_blank')">Ouvrir Admin</button>
-    </div>
-
-    <script src="indexeddb.js"></script>
-    <script>
-        // Test CSS
-        if (getComputedStyle(document.body).fontFamily.includes('Arial')) {
-            document.getElementById('css-test').innerHTML = '✅ CSS chargé';
-            document.getElementById('css-test').className = 'success';
-        } else {
-            document.getElementById('css-test').innerHTML = '❌ CSS non chargé';
-            document.getElementById('css-test').className = 'error';
-        }
-        
-        // Test JavaScript
-        document.getElementById('js-test').innerHTML = '✅ JavaScript chargé';
-        document.getElementById('js-test').className = 'success';
-        
-        // Test IndexedDB
-        async function testIndexedDB() {
-            const testDiv = document.getElementById('indexeddb-test');
-            try {
-                await portfolioDB.init();
-                await portfolioDB.saveData('test', { message: 'Test réussi', timestamp: Date.now() });
-                const data = await portfolioDB.getData('test');
-                
-                if (data && data.message === 'Test réussi') {
-                    testDiv.innerHTML = '✅ IndexedDB fonctionne correctement';
-                    testDiv.className = 'success';
-                } else {
-                    testDiv.innerHTML = '❌ IndexedDB: Erreur de lecture';
-                    testDiv.className = 'error';
-                }
-            } catch (error) {
-                testDiv.innerHTML = '❌ IndexedDB: ' + error.message;
-                testDiv.className = 'error';
-            }
-        }
-        
-        // Test LocalStorage
-        function testLocalStorage() {
-            const testDiv = document.getElementById('localstorage-test');
-            try {
-                localStorage.setItem('test', 'Test réussi');
-                const data = localStorage.getItem('test');
-                
-                if (data === 'Test réussi') {
-                    testDiv.innerHTML = '✅ LocalStorage fonctionne correctement';
-                    testDiv.className = 'success';
-                    localStorage.removeItem('test');
-                } else {
-                    testDiv.innerHTML = '❌ LocalStorage: Erreur de lecture';
-                    testDiv.className = 'error';
-                }
-            } catch (error) {
-                testDiv.innerHTML = '❌ LocalStorage: ' + error.message;
-                testDiv.className = 'error';
-            }
-        }
-        
-        // Tests automatiques
-        setTimeout(() => {
-            testIndexedDB();
-            testLocalStorage();
-        }, 1000);
-    </script>
+    <p>Test 4 - Lien Google (pour vérifier si les liens fonctionnent):</p>
+    <a href="https://google.com" target="_blank">Google</a>
 </body>
 </html>
