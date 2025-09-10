@@ -141,29 +141,10 @@ def get_services():
     services = content.get('services', [])
     return jsonify(services)
 
-@app.route('/test')
-def test_page():
-    return '''<!DOCTYPE html>
-<html>
-<head>
-    <title>Test WhatsApp</title>
-</head>
-<body>
-    <h1>Test des liens WhatsApp</h1>
-    
-    <p>Test 1 - Lien simple:</p>
-    <a href="https://wa.me/+15141234567" target="_blank">Ouvrir WhatsApp</a>
-    
-    <p>Test 2 - Avec message:</p>
-    <a href="https://wa.me/+15141234567?text=Bonjour" target="_blank">WhatsApp avec message</a>
-    
-    <p>Test 3 - Bouton avec onclick:</p>
-    <button onclick="window.open('https://wa.me/+15141234567', '_blank')">Bouton WhatsApp</button>
-    
-    <p>Test 4 - Lien Google (pour vérifier si les liens fonctionnent):</p>
-    <a href="https://google.com" target="_blank">Google</a>
-</body>
-</html>'''
+@app.route('/debug')
+def debug_page():
+    with open('debug.html', 'r', encoding='utf-8') as f:
+        return f.read()
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

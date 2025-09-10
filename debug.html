@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug WhatsApp</title>
+    <style>
+        .test-btn {
+            background: #1a1a1a;
+            color: white;
+            padding: 15px 30px;
+            margin: 10px;
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tests WhatsApp</h1>
+    
+    <h2>Test 1 - Lien simple</h2>
+    <a href="https://wa.me/+15141234567" class="test-btn">Test 1</a>
+    
+    <h2>Test 2 - Avec message court</h2>
+    <a href="https://wa.me/+15141234567?text=Bonjour" class="test-btn">Test 2</a>
+    
+    <h2>Test 3 - Bouton onclick</h2>
+    <button class="test-btn" onclick="window.open('https://wa.me/+15141234567', '_blank')">Test 3</button>
+    
+    <h2>Test 4 - window.location</h2>
+    <button class="test-btn" onclick="window.location.href='https://wa.me/+15141234567'">Test 4</button>
+    
+    <h2>Test 5 - Même style que services</h2>
+    <a href="https://wa.me/+15141234567?text=Bonjour%20Prima%20Photo%2C%20je%20souhaite%20r%C3%A9server%20le%20service%20Portraits" class="test-btn" style="text-decoration:none;display:inline-block;color:white;">Test 5</a>
+    
+    <h2>Test 6 - Vérifier si c'est un problème de CSS</h2>
+    <div style="background:red;padding:20px;">
+        <a href="https://wa.me/+15141234567" style="background:blue;color:white;padding:10px;text-decoration:none;">Test 6</a>
+    </div>
+    
+    <script>
+        console.log('Page chargée');
+        
+        // Test si les clics fonctionnent
+        document.querySelectorAll('a, button').forEach((el, index) => {
+            el.addEventListener('click', function(e) {
+                console.log(`Clic sur élément ${index + 1}:`, this.href || this.onclick);
+            });
+        });
+    </script>
+</body>
+</html>
