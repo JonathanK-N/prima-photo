@@ -253,7 +253,13 @@ function loadServicesDisplay() {
         { id: 6, name: 'Remise de Diplômes', icon: 'fas fa-graduation-cap', description: 'Immortalisation de ce moment important avec des photos de qualité professionnelle. Souvenirs durables de votre réussite.', price: 'À partir de 180€' }
     ];
     
-    const services = {{ content.services | tojsonhtml }} || defaultServices;
+    let services;
+    try {
+        services = {% if content.services %}{{ content.services | tojson | safe }}{% else %}null{% endif %} || defaultServices;
+    } catch (e) {
+        services = defaultServices;
+    }
+    
     const servicesDisplay = document.getElementById('servicesDisplay');
     
     servicesDisplay.innerHTML = services.map(service => `
