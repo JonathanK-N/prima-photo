@@ -450,19 +450,14 @@ async function loadDataFromAPI() {
 
 // Charger les données au démarrage
 document.addEventListener('DOMContentLoaded', () => {
-    // Charger depuis URL en premier (synchronisation)
-    const synced = urlSync.loadFromURL();
+    // Priorité à l'API pour la synchronisation
+    loadDataFromAPI();
     
+    // Fallback local seulement si API échoue
     setTimeout(() => {
-        loadDataFromAPI(); // Charger API
-        loadStoredImages(); // Puis localStorage
-        loadAboutFromIndexedDB(); // Puis IndexedDB
-        
-        if (synced) {
-            // Nettoyer l'URL après synchronisation
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-    }, 100);
+        loadStoredImages();
+        loadAboutFromIndexedDB();
+    }, 1000);
 });
 
 // Écouter les changements de localStorage
@@ -551,8 +546,8 @@ window.addEventListener('dataChanged', function(event) {
     setTimeout(forceSync, 100);
 });
 
-// Recharger le contenu toutes les 2 secondes
-setInterval(forceSync, 2000);
+// Recharger le contenu toutes les 5 secondes
+setInterval(forceSync, 5000);
 
 // Synchronisation au focus de la fenêtre
 window.addEventListener('focus', forceSync);

@@ -279,7 +279,7 @@ function updateSiteContent() {
 }
 
 // Gestion des services
-function saveServices() {
+async function saveServices() {
     const services = {
         portrait: {
             description: document.getElementById('portraitDesc').value,
@@ -295,8 +295,8 @@ function saveServices() {
         }
     };
     
+    await portfolioAPI.saveData('services', services);
     localStorage.setItem('portfolioServices', JSON.stringify(services));
-    updateSiteContent();
     showNotification('Services sauvegardés!');
 }
 
@@ -474,7 +474,8 @@ async function saveAbout() {
             }
         };
         
-        // Sauvegarder seulement dans IndexedDB (pas de limite de taille)
+        // Sauvegarder dans l'API et IndexedDB
+        await portfolioAPI.saveData('about', about);
         await portfolioDB.saveData('portfolioAbout', about);
         
         console.log('About data saved:', about);
@@ -486,7 +487,7 @@ async function saveAbout() {
 }
 
 // Gestion du contact
-function saveContact(e) {
+async function saveContact(e) {
     e.preventDefault();
     
     const contact = {
@@ -503,8 +504,8 @@ function saveContact(e) {
         }
     };
     
+    await portfolioAPI.saveData('contact', contact);
     localStorage.setItem('portfolioContact', JSON.stringify(contact));
-    updateSiteContent();
     showNotification('Informations de contact sauvegardées!');
 }
 
