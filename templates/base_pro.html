@@ -436,7 +436,7 @@
 
         .service-btn {
             background: var(--primary-color);
-            color: white;
+            color: white !important;
             border: none;
             padding: 15px 30px;
             font-size: 12px;
@@ -445,6 +445,11 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
+            text-decoration: none !important;
+            display: inline-block;
+            pointer-events: auto !important;
+            z-index: 999;
+            position: relative;
         }
 
         .service-btn:hover {
