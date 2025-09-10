@@ -386,7 +386,7 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
 
 // Contact service function
 function contactService(service, message) {
-    const whatsappNumber = '15141234567'; // Remplacer par le vrai numéro
+    const whatsappNumber = '15141234567';
     const fullMessage = `Bonjour Prima Photo,\n\nService: ${service}\n\n${message}\n\nCordialement`;
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(fullMessage)}`;
     window.open(whatsappUrl, '_blank');
