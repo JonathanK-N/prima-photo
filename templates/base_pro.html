@@ -651,6 +651,14 @@
     {% block content %}{% endblock %}
     
     <script>
+        // WhatsApp function
+        function openWhatsApp(service) {
+            const whatsappNumber = '15141234567';
+            const message = `Bonjour Prima Photo,\n\nService: ${service}\n\nJe souhaite réserver le service ${service}. Pouvez-vous me donner plus d'informations sur vos disponibilités et tarifs ?\n\nCordialement`;
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
         // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const navbar = document.querySelector('.navbar');
