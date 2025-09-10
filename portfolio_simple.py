@@ -38,7 +38,7 @@ def save_content(content):
 def index():
     photos = load_photos()
     content = load_content()
-    return render_template('index.html', photos=photos, content=content)
+    return render_template('index_pro.html', photos=photos, content=content)
 
 @app.route('/admin')
 def admin_login():
@@ -64,7 +64,7 @@ def admin_dashboard():
         return redirect(url_for('admin_login'))
     
     photos = load_photos()
-    return render_template('admin_dashboard.html', photos=photos)
+    return render_template('admin_pro.html', photos=photos)
 
 @app.route('/admin/logout')
 def admin_logout():

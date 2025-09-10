@@ -1,0 +1,392 @@
+{% extends "base_pro.html" %}
+
+{% block content %}
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="#home" class="logo">Prima Photo</a>
+        <ul class="nav-menu">
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#gallery">Portfolio</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#about">À Propos</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="home" class="hero">
+    <div class="hero-content">
+        <h1>{{ content.hero.title if content.hero else 'Prima Photo' }}</h1>
+        <p>{{ content.hero.subtitle if content.hero else 'Capturer vos moments les plus précieux avec une approche artistique et professionnelle' }}</p>
+        <a href="#contact" class="cta-button">{{ content.hero.button_text if content.hero else 'Réserver une séance' }}</a>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+<section id="gallery" class="section gallery">
+    <div class="container">
+        <h2 class="section-title serif">Mon Portfolio</h2>
+        
+        <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="all">Tous</button>
+            <button class="filter-btn" data-filter="portrait">Portraits</button>
+            <button class="filter-btn" data-filter="mariage">Mariages</button>
+            <button class="filter-btn" data-filter="evenement">Événements</button>
+            <button class="filter-btn" data-filter="famille">Famille</button>
+        </div>
+        
+        <div class="gallery-grid" id="galleryGrid">
+            {% for photo in photos %}
+            <div class="gallery-item" data-category="{{ photo.category }}">
+                <img src="{{ photo.image_data }}" alt="{{ photo.title }}" loading="lazy">
+                <div class="gallery-overlay">
+                    <h4>{{ photo.title }}</h4>
+                    <p>{{ photo.description }}</p>
+                </div>
+            </div>
+            {% else %}
+            <!-- Photos par défaut pour démonstration -->
+            <div class="gallery-item" data-category="portrait">
+                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&h=600&fit=crop" alt="Portrait Élégant">
+                <div class="gallery-overlay">
+                    <h4>Portrait Élégant</h4>
+                    <p>Séance portrait en studio avec éclairage professionnel</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="mariage">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop" alt="Mariage Romantique">
+                <div class="gallery-overlay">
+                    <h4>Mariage Romantique</h4>
+                    <p>Cérémonie intime capturée avec sensibilité</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="evenement">
+                <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop" alt="Événement Corporate">
+                <div class="gallery-overlay">
+                    <h4>Événement Corporate</h4>
+                    <p>Reportage professionnel d'entreprise</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="famille">
+                <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&h=600&fit=crop" alt="Séance Famille">
+                <div class="gallery-overlay">
+                    <h4>Séance Famille</h4>
+                    <p>Moments de complicité en extérieur</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="portrait">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop" alt="Portrait Masculin">
+                <div class="gallery-overlay">
+                    <h4>Portrait Masculin</h4>
+                    <p>Portrait professionnel en lumière naturelle</p>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="mariage">
+                <img src="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800&h=600&fit=crop" alt="Détails Mariage">
+                <div class="gallery-overlay">
+                    <h4>Détails Mariage</h4>
+                    <p>Capture des détails précieux du jour J</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="section services">
+    <div class="container">
+        <h2 class="section-title serif">Mes Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h3>Portraits</h3>
+                <p>Séances portrait professionnelles en studio ou en extérieur. Mise en valeur de votre personnalité avec un style unique et intemporel.</p>
+                <div class="service-price">À partir de 200€</div>
+                <button class="service-btn" onclick="contactService('Portrait Professionnel', 'Je souhaite réserver une séance portrait. Pouvez-vous me donner plus d\'informations sur vos disponibilités et tarifs ?')">
+                    Réserver
+                </button>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3>Mariages</h3>
+                <p>Couverture complète de votre mariage avec un reportage discret et artistique. Immortalisation de chaque émotion de votre jour J.</p>
+                <div class="service-price">À partir de 1200€</div>
+                <button class="service-btn" onclick="contactService('Mariage', 'Je souhaite connaître vos prestations mariage. Pouvez-vous m\'envoyer votre brochure et vos disponibilités ?')">
+                    Réserver
+                </button>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <h3>Événements</h3>
+                <p>Reportage photo pour vos événements d'entreprise, anniversaires, baptêmes. Couverture professionnelle adaptée à chaque occasion.</p>
+                <div class="service-price">À partir de 400€</div>
+                <button class="service-btn" onclick="contactService('Événement', 'Je souhaite organiser un reportage photo pour un événement. Pouvez-vous me contacter pour discuter des détails ?')">
+                    Réserver
+                </button>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Famille</h3>
+                <p>Séances photo famille dans un cadre naturel et détendu. Capture des liens familiaux et des moments de complicité authentiques.</p>
+                <div class="service-price">À partir de 250€</div>
+                <button class="service-btn" onclick="contactService('Séance Famille', 'Je souhaite organiser une séance photo famille. Pouvez-vous me proposer des créneaux et lieux disponibles ?')">
+                    Réserver
+                </button>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h3>Corporate</h3>
+                <p>Photos professionnelles pour entreprises, portraits corporate, événements d'entreprise. Valorisation de votre image de marque.</p>
+                <div class="service-price">À partir de 350€</div>
+                <button class="service-btn" onclick="contactService('Corporate', 'Je représente une entreprise et nous cherchons un photographe professionnel. Pouvez-vous nous présenter vos services corporate ?')">
+                    Réserver
+                </button>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Remise de Diplômes</h3>
+                <p>Immortalisation de ce moment important avec des photos de qualité professionnelle. Souvenirs durables de votre réussite.</p>
+                <div class="service-price">À partir de 180€</div>
+                <button class="service-btn" onclick="contactService('Remise de Diplômes', 'Je souhaite immortaliser ma remise de diplômes. Quels sont vos forfaits disponibles ?')">
+                    Réserver
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="section about">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2 class="serif">{{ content.about.title if content.about else 'À Propos de Moi' }}</h2>
+                <p>{{ content.about.paragraph1 if content.about else 'Passionné de photographie depuis plus de 10 ans, je me spécialise dans la capture d\'émotions authentiques et de moments précieux. Mon approche artistique combine technique professionnelle et sensibilité humaine.' }}</p>
+                <p>{{ content.about.paragraph2 if content.about else 'Basé à Montréal, je travaille avec des clients du monde entier pour créer des images intemporelles qui racontent votre histoire unique. Chaque séance est une collaboration créative pour révéler votre essence.' }}</p>
+                
+                <div class="stats">
+                    <div class="stat">
+                        <span class="number">{{ content.about.stat1_number if content.about else '500+' }}</span>
+                        <span class="label">{{ content.about.stat1_label if content.about else 'Clients Satisfaits' }}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number">{{ content.about.stat2_number if content.about else '150+' }}</span>
+                        <span class="label">{{ content.about.stat2_label if content.about else 'Mariages' }}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number">{{ content.about.stat3_number if content.about else '10+' }}</span>
+                        <span class="label">{{ content.about.stat3_label if content.about else 'Années d\'Expérience' }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="about-image">
+                {% if content.about and content.about.image %}
+                    <img src="{{ content.about.image }}" alt="Photographe Prima Photo">
+                {% else %}
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&h=600&fit=crop" alt="Photographe Prima Photo">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="section contact">
+    <div class="container">
+        <h2 class="section-title serif">Contactez-Moi</h2>
+        <div class="contact-content">
+            <div class="contact-info">
+                <h3 class="serif">Parlons de Votre Projet</h3>
+                <p>Je serais ravi de discuter de vos besoins et de créer ensemble des images exceptionnelles.</p>
+                
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>{{ content.contact.email if content.contact else 'contact@primaphoto.ca' }}</span>
+                </div>
+                
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>{{ content.contact.phone if content.contact else '+1 (514) 123-4567' }}</span>
+                </div>
+                
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{ content.contact.address if content.contact else 'Montréal, Québec, Canada' }}</span>
+                </div>
+                
+                <div class="social-links">
+                    <a href="{{ content.contact.instagram if content.contact else '#' }}" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="{{ content.contact.facebook if content.contact else '#' }}" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="{{ content.contact.linkedin if content.contact else '#' }}" target="_blank">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="{{ content.contact.behance if content.contact else '#' }}" target="_blank">
+                        <i class="fab fa-behance"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="contact-form">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Nom Complet</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Téléphone</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="service">Service Souhaité</label>
+                        <select id="service" name="service" required>
+                            <option value="">Sélectionnez un service</option>
+                            <option value="Portrait">Portrait</option>
+                            <option value="Mariage">Mariage</option>
+                            <option value="Événement">Événement</option>
+                            <option value="Famille">Famille</option>
+                            <option value="Corporate">Corporate</option>
+                            <option value="Remise de Diplômes">Remise de Diplômes</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" placeholder="Décrivez votre projet, vos attentes, la date souhaitée..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Envoyer le Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 Prima Photo. Tous droits réservés. | Photographe Professionnel à Montréal</p>
+    </div>
+</footer>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Gallery filters
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const filter = btn.dataset.filter;
+        const items = document.querySelectorAll('.gallery-item');
+        
+        items.forEach(item => {
+            if (filter === 'all' || item.dataset.category === filter) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+});
+
+// Contact service function
+function contactService(service, message) {
+    const whatsappNumber = '15141234567'; // Remplacer par le vrai numéro
+    const fullMessage = `Bonjour Prima Photo,\n\nService: ${service}\n\n${message}\n\nCordialement`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(fullMessage)}`;
+    window.open(whatsappUrl, '_blank');
+}
+
+// Contact form
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const phone = formData.get('phone');
+    const service = formData.get('service');
+    const message = formData.get('message');
+    
+    const whatsappMessage = `Nouveau contact depuis le site web:\n\nNom: ${name}\nEmail: ${email}\nTéléphone: ${phone}\nService: ${service}\n\nMessage:\n${message}`;
+    
+    const whatsappNumber = '15141234567'; // Remplacer par le vrai numéro
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+    
+    window.open(whatsappUrl, '_blank');
+    
+    // Reset form
+    this.reset();
+    alert('Merci ! Votre message va être envoyé via WhatsApp.');
+});
+
+// Mobile menu toggle
+document.querySelector('.mobile-menu').addEventListener('click', function() {
+    const navMenu = document.querySelector('.nav-menu');
+    navMenu.classList.toggle('active');
+    this.classList.toggle('active');
+});
+
+// Smooth reveal animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+// Observe elements for animation
+document.querySelectorAll('.gallery-item, .service-card, .about-text, .about-image').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+});
+</script>
+{% endblock %}
