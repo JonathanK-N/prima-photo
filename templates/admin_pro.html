@@ -1172,8 +1172,20 @@
             showAlert('Service ajouté avec succès !', 'success');
         });
 
-        // Load services on page load
-        document.addEventListener('DOMContentLoaded', () => {
+        // Load services on page load and sync with frontend
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load saved services from server
+            try {
+                const response = await fetch('/admin/get_services');
+                if (response.ok) {
+                    const savedServices = await response.json();
+                    if (savedServices && savedServices.length > 0) {
+                        services = savedServices;
+                    }
+                }
+            } catch (error) {
+                console.log('Using default services');
+            }
             loadServices();
         });
 

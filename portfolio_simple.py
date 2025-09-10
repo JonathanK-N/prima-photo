@@ -135,6 +135,12 @@ def save_content_route():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
 
+@app.route('/admin/get_services', methods=['GET'])
+def get_services():
+    content = load_content()
+    services = content.get('services', [])
+    return jsonify(services)
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=False, host='0.0.0.0', port=port)
