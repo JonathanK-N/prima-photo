@@ -677,9 +677,18 @@
         });
 
         function previewImage(file) {
+            // Vérifier la taille du fichier (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showAlert('L\'image est trop lourde. Veuillez choisir une image de moins de 5MB.', 'error');
+                return;
+            }
+            
             const reader = new FileReader();
             reader.onload = (e) => {
-                imagePreview.innerHTML = `<img src="${e.target.result}" alt="Aperçu">`;
+                // Compresser l'image
+                compressImage(e.target.result, (compressedImage) => {
+                    imagePreview.innerHTML = `<img src="${compressedImage}" alt="Aperçu">`;
+                });
             };
             reader.readAsDataURL(file);
         }
@@ -688,37 +697,57 @@
         document.getElementById('photoForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const formData = new FormData();
-            formData.append('title', document.getElementById('title').value);
-            formData.append('description', document.getElementById('description').value);
-            formData.append('category', document.getElementById('category').value);
-            formData.append('image', document.getElementById('imageFile').files[0]);
-            
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<div class="loading"><div class="spinner"></div> Ajout en cours...</div>';
-            submitBtn.disabled = true;
-            
-            try {
-                const response = await fetch('/admin/add_photo', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showAlert('Photo ajoutée avec succès !', 'success');
-                    setTimeout(() => location.reload(), 1500);
-                } else {
-                    showAlert('Erreur: ' + result.message, 'error');
-                }
-            } catch (error) {
-                showAlert('Erreur lors de l\'ajout de la photo', 'error');
-            } finally {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+            const previewImg = imagePreview.querySelector('img');
+            if (!previewImg) {
+                showAlert('Veuillez sélectionner une image', 'error');
+                return;
             }
+            
+            // Convertir l'image compressée en blob
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            img.onload = async function() {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                
+                canvas.toBlob(async (blob) => {
+                    const formData = new FormData();
+                    formData.append('title', document.getElementById('title').value);
+                    formData.append('description', document.getElementById('description').value);
+                    formData.append('category', document.getElementById('category').value);
+                    formData.append('image', blob, 'compressed.jpg');
+                    
+                    const submitBtn = e.target.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<div class="loading"><div class="spinner"></div> Ajout en cours...</div>';
+                    submitBtn.disabled = true;
+                    
+                    try {
+                        const response = await fetch('/admin/add_photo', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            showAlert('Photo ajoutée avec succès !', 'success');
+                            setTimeout(() => location.reload(), 1500);
+                        } else {
+                            showAlert('Erreur: ' + result.message, 'error');
+                        }
+                    } catch (error) {
+                        showAlert('Erreur lors de l\'ajout de la photo', 'error');
+                    } finally {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
+                }, 'image/jpeg', 0.7);
+            };
+            img.src = previewImg.src;
         });
 
         // Save content functions
@@ -792,11 +821,52 @@
         });
 
         function previewAboutImage(file) {
+            // Vérifier la taille du fichier (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showAlert('L\'image est trop lourde. Veuillez choisir une image de moins de 5MB.', 'error');
+                return;
+            }
+            
             const reader = new FileReader();
             reader.onload = (e) => {
-                aboutImagePreview.innerHTML = `<img src="${e.target.result}" alt="Aperçu">`;
+                // Compresser l'image
+                compressImage(e.target.result, (compressedImage) => {
+                    aboutImagePreview.innerHTML = `<img src="${compressedImage}" alt="Aperçu">`;
+                });
             };
             reader.readAsDataURL(file);
+        }
+        
+        // Fonction de compression d'image
+        function compressImage(src, callback, quality = 0.7) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Redimensionner si trop grand
+                let { width, height } = img;
+                const maxSize = 800;
+                
+                if (width > height && width > maxSize) {
+                    height = (height * maxSize) / width;
+                    width = maxSize;
+                } else if (height > maxSize) {
+                    width = (width * maxSize) / height;
+                    height = maxSize;
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                
+                // Dessiner l'image redimensionnée
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // Convertir en base64 compressé
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+                callback(compressedDataUrl);
+            };
+            img.src = src;
         }
 
         // About form
