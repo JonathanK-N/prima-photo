@@ -366,27 +366,70 @@ document.querySelector('.mobile-menu').addEventListener('click', function() {
     this.classList.toggle('active');
 });
 
-// Smooth reveal animations
+// Enhanced animations
 const observerOptions = {
     threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+    rootMargin: '0px 0px -100px 0px'
 };
 
 const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
+    entries.forEach((entry, index) => {
         if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
+            setTimeout(() => {
+                entry.target.classList.add('animate');
+            }, index * 100);
         }
     });
 }, observerOptions);
 
-// Observe elements for animation
-document.querySelectorAll('.gallery-item, .service-card, .about-text, .about-image').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+// Observe elements for staggered animation
+document.querySelectorAll('.section-title, .gallery-item, .service-card, .about-text, .about-image, .contact-item').forEach(el => {
     observer.observe(el);
 });
+
+// Parallax effect for hero
+window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    const hero = document.querySelector('.hero');
+    if (hero) {
+        hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+    }
+});
+
+// Smooth counter animation for stats
+function animateCounter(element, target) {
+    let current = 0;
+    const increment = target / 100;
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            element.textContent = target;
+            clearInterval(timer);
+        } else {
+            element.textContent = Math.floor(current);
+        }
+    }, 20);
+}
+
+// Trigger counter animation when stats come into view
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const numbers = entry.target.querySelectorAll('.number');
+            numbers.forEach(num => {
+                const target = parseInt(num.textContent.replace(/\D/g, ''));
+                if (target) {
+                    animateCounter(num, target);
+                }
+            });
+            statsObserver.unobserve(entry.target);
+        }
+    });
+});
+
+const statsSection = document.querySelector('.stats');
+if (statsSection) {
+    statsObserver.observe(statsSection);
+}
 </script>
 {% endblock %}

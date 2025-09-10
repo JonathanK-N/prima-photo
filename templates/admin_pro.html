@@ -551,6 +551,17 @@
                     </div>
                 </div>
                 
+                <div class="form-group">
+                    <label for="aboutImage">Photo À Propos</label>
+                    <div class="upload-area" id="aboutUploadArea">
+                        <i class="fas fa-user-circle"></i>
+                        <p><strong>Glissez-déposez</strong> votre photo ou <strong>cliquez</strong> pour sélectionner</p>
+                        <p style="font-size: 12px; color: #9ca3af;">Photo de profil recommandée - JPG, PNG</p>
+                        <input type="file" id="aboutImageFile" name="aboutImage" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="preview" id="aboutImagePreview"></div>
+                </div>
+                
                 <button type="submit" class="btn btn-success">
                     <i class="fas fa-save"></i> Sauvegarder À Propos
                 </button>
@@ -745,9 +756,45 @@
             saveContent('hero', data);
         });
 
+        // About image upload
+        const aboutUploadArea = document.getElementById('aboutUploadArea');
+        const aboutImageFile = document.getElementById('aboutImageFile');
+        const aboutImagePreview = document.getElementById('aboutImagePreview');
+
+        aboutUploadArea.addEventListener('click', () => aboutImageFile.click());
+        aboutUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            aboutUploadArea.classList.add('dragover');
+        });
+        aboutUploadArea.addEventListener('dragleave', () => aboutUploadArea.classList.remove('dragover'));
+        aboutUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            aboutUploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                aboutImageFile.files = files;
+                previewAboutImage(files[0]);
+            }
+        });
+
+        aboutImageFile.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                previewAboutImage(e.target.files[0]);
+            }
+        });
+
+        function previewAboutImage(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                aboutImagePreview.innerHTML = `<img src="${e.target.result}" alt="Aperçu">`;
+            };
+            reader.readAsDataURL(file);
+        }
+
         // About form
         document.getElementById('aboutForm').addEventListener('submit', (e) => {
             e.preventDefault();
+            const aboutImage = aboutImagePreview.querySelector('img');
             const data = {
                 title: document.getElementById('aboutTitle').value,
                 paragraph1: document.getElementById('aboutPara1').value,
@@ -757,7 +804,8 @@
                 stat2_number: document.getElementById('stat2Number').value,
                 stat2_label: document.getElementById('stat2Label').value,
                 stat3_number: document.getElementById('stat3Number').value,
-                stat3_label: document.getElementById('stat3Label').value
+                stat3_label: document.getElementById('stat3Label').value,
+                image: aboutImage ? aboutImage.src : null
             };
             saveContent('about', data);
         });
