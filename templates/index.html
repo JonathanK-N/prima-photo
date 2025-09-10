@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="container">
+        <div class="nav-content">
+            <div class="logo">Prima Photo</div>
+            <ul class="nav-menu">
+                <li><a href="#home">Accueil</a></li>
+                <li><a href="#gallery">Galerie</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="/admin">Admin</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="home" class="hero">
+    <div class="container">
+        <h1>{{ hero.data.title if hero and hero.data.title else 'Prima Photo' }}</h1>
+        <p>{{ hero.data.subtitle if hero and hero.data.subtitle else 'Photographe professionnel spécialisé en portraits et mariages' }}</p>
+        <a href="#contact" class="cta-btn">{{ hero.data.button_text if hero and hero.data.button_text else 'Me contacter' }}</a>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+<section id="gallery" class="gallery">
+    <div class="container">
+        <h2>Ma Galerie</h2>
+        
+        <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="all">Tout</button>
+            <button class="filter-btn" data-filter="portrait">Portrait</button>
+            <button class="filter-btn" data-filter="mariage">Mariage</button>
+            <button class="filter-btn" data-filter="evenement">Événement</button>
+        </div>
+        
+        <div class="gallery-grid" id="galleryGrid">
+            {% for photo in photos %}
+            <div class="gallery-item" data-category="{{ photo.category }}">
+                <img src="{{ photo.image_data }}" alt="{{ photo.title }}">
+                <div class="gallery-overlay">
+                    <h4>{{ photo.title }}</h4>
+                    <p>{{ photo.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="services">
+    <div class="container">
+        <h2>Mes Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <i class="fas fa-user"></i>
+                <h3>Portrait</h3>
+                <p>Séances photo portrait professionnelles en studio ou extérieur</p>
+                <div class="price">À partir de 150€</div>
+                <button onclick="reserveService('portrait')" class="cta-btn">Réserver</button>
+            </div>
+            
+            <div class="service-card">
+                <i class="fas fa-heart"></i>
+                <h3>Mariage</h3>
+                <p>Couverture complète de votre jour J avec reportage photo</p>
+                <div class="price">À partir de 800€</div>
+                <button onclick="reserveService('mariage')" class="cta-btn">Réserver</button>
+            </div>
+            
+            <div class="service-card">
+                <i class="fas fa-camera"></i>
+                <h3>Événement</h3>
+                <p>Reportage photo pour tous vos événements spéciaux</p>
+                <div class="price">À partir de 300€</div>
+                <button onclick="reserveService('evenement')" class="cta-btn">Réserver</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="contact">
+    <div class="container">
+        <h2>Contact</h2>
+        <div class="contact-content">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>contact@primaphoto.ca</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>+1 (514) 123-4567</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Montréal, QC</span>
+                </div>
+            </div>
+            
+            <form class="contact-form" onsubmit="sendMessage(event)">
+                <input type="text" placeholder="Votre nom" required>
+                <input type="email" placeholder="Votre email" required>
+                <textarea placeholder="Votre message" rows="5" required></textarea>
+                <button type="submit">Envoyer</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 Prima Photo. Tous droits réservés.</p>
+    </div>
+</footer>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Filtres galerie
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const filter = btn.dataset.filter;
+        const items = document.querySelectorAll('.gallery-item');
+        
+        items.forEach(item => {
+            if (filter === 'all' || item.dataset.category === filter) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+});
+
+// Réservation WhatsApp
+function reserveService(service) {
+    const message = `Bonjour, je souhaite réserver une séance ${service}. Pouvez-vous me donner plus d'informations ?`;
+    const whatsappUrl = `https://wa.me/15141234567?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+}
+
+// Formulaire contact
+function sendMessage(event) {
+    event.preventDefault();
+    alert('Message envoyé ! Nous vous répondrons bientôt.');
+    event.target.reset();
+}
+</script>
+{% endblock %}

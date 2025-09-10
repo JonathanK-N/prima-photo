@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Prima Photo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        
+        .header { background: white; padding: 15px 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { color: #333; }
+        .header .actions { display: flex; gap: 15px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.3s; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .tabs { display: flex; background: white; border-radius: 10px; overflow: hidden; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; background: #f8f9fa; border: none; transition: all 0.3s; }
+        .tab.active { background: #667eea; color: white; }
+        
+        .tab-content { display: none; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .tab-content.active { display: block; }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .form-group textarea { height: 100px; resize: vertical; }
+        
+        .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
+        .photo-item { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: relative; }
+        .photo-item img { width: 100%; height: 200px; object-fit: cover; }
+        .photo-info { padding: 15px; }
+        .photo-info h4 { margin-bottom: 5px; color: #333; }
+        .photo-info p { color: #666; font-size: 14px; margin-bottom: 10px; }
+        .photo-category { background: #667eea; color: white; padding: 3px 8px; border-radius: 15px; font-size: 12px; }
+        .delete-btn { position: absolute; top: 10px; right: 10px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; }
+        
+        .upload-area { border: 2px dashed #ddd; border-radius: 10px; padding: 40px; text-align: center; margin-bottom: 20px; transition: all 0.3s; }
+        .upload-area:hover { border-color: #667eea; background: #f8f9ff; }
+        .upload-area.dragover { border-color: #667eea; background: #f0f8ff; }
+        
+        .preview { margin-top: 15px; text-align: center; }
+        .preview img { max-width: 200px; max-height: 200px; border-radius: 5px; }
+        
+        .success { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 20px; }
+        .error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-camera"></i> Prima Photo Admin</h1>
+        <div class="actions">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary" target="_blank">
+                <i class="fas fa-external-link-alt"></i> Voir le site
+            </a>
+            <a href="{{ url_for('admin_logout') }}" class="btn btn-primary">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('photos')">
+                <i class="fas fa-images"></i> Galerie Photos
+            </button>
+            <button class="tab" onclick="showTab('content')">
+                <i class="fas fa-edit"></i> Contenu du Site
+            </button>
+            <button class="tab" onclick="showTab('settings')">
+                <i class="fas fa-cog"></i> Paramètres
+            </button>
+        </div>
+
+        <!-- Onglet Photos -->
+        <div id="photos" class="tab-content active">
+            <h2><i class="fas fa-plus"></i> Ajouter une Photo</h2>
+            
+            <form id="photoForm" enctype="multipart/form-data">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: #ddd; margin-bottom: 15px;"></i>
+                    <p>Glissez-déposez une image ici ou cliquez pour sélectionner</p>
+                    <input type="file" id="imageFile" name="image" accept="image/*" style="display: none;">
+                </div>
+                
+                <div class="preview" id="imagePreview"></div>
+                
+                <div class="form-group">
+                    <label for="title">Titre</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="category">Catégorie</label>
+                    <select id="category" name="category" required>
+                        <option value="portrait">Portrait</option>
+                        <option value="mariage">Mariage</option>
+                        <option value="evenement">Événement</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Ajouter la Photo
+                </button>
+            </form>
+
+            <div class="photo-grid">
+                {% for photo in photos %}
+                <div class="photo-item">
+                    <img src="{{ photo.image_data }}" alt="{{ photo.title }}">
+                    <button class="delete-btn" onclick="deletePhoto({{ photo.id }})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <div class="photo-info">
+                        <h4>{{ photo.title }}</h4>
+                        <p>{{ photo.description }}</p>
+                        <span class="photo-category">{{ photo.category }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Onglet Contenu -->
+        <div id="content" class="tab-content">
+            <h2><i class="fas fa-edit"></i> Modifier le Contenu</h2>
+            
+            <form id="contentForm">
+                <h3>Section Accueil</h3>
+                <div class="form-group">
+                    <label for="heroTitle">Titre principal</label>
+                    <input type="text" id="heroTitle" value="Prima Photo">
+                </div>
+                
+                <div class="form-group">
+                    <label for="heroSubtitle">Sous-titre</label>
+                    <input type="text" id="heroSubtitle" value="Photographe professionnel spécialisé en portraits et mariages">
+                </div>
+                
+                <div class="form-group">
+                    <label for="heroButton">Texte du bouton</label>
+                    <input type="text" id="heroButton" value="Me contacter">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Sauvegarder
+                </button>
+            </form>
+        </div>
+
+        <!-- Onglet Paramètres -->
+        <div id="settings" class="tab-content">
+            <h2><i class="fas fa-cog"></i> Paramètres</h2>
+            <p>Fonctionnalités à venir...</p>
+        </div>
+    </div>
+
+    <script>
+        // Gestion des onglets
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Upload d'images
+        const uploadArea = document.getElementById('uploadArea');
+        const imageFile = document.getElementById('imageFile');
+        const imagePreview = document.getElementById('imagePreview');
+
+        uploadArea.addEventListener('click', () => imageFile.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                imageFile.files = files;
+                previewImage(files[0]);
+            }
+        });
+
+        imageFile.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                previewImage(e.target.files[0]);
+            }
+        });
+
+        function previewImage(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.innerHTML = `<img src="${e.target.result}" alt="Aperçu">`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Soumission du formulaire photo
+        document.getElementById('photoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('title', document.getElementById('title').value);
+            formData.append('description', document.getElementById('description').value);
+            formData.append('category', document.getElementById('category').value);
+            formData.append('image', document.getElementById('imageFile').files[0]);
+            
+            try {
+                const response = await fetch('/admin/add_photo', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Photo ajoutée avec succès !');
+                    location.reload();
+                } else {
+                    alert('Erreur: ' + result.message);
+                }
+            } catch (error) {
+                alert('Erreur lors de l\'ajout de la photo');
+            }
+        });
+
+        // Suppression de photo
+        async function deletePhoto(photoId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette photo ?')) {
+                try {
+                    const response = await fetch(`/admin/delete_photo/${photoId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        location.reload();
+                    } else {
+                        alert('Erreur lors de la suppression');
+                    }
+                } catch (error) {
+                    alert('Erreur lors de la suppression');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
