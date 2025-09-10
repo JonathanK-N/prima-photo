@@ -1,0 +1,46 @@
+{
+  "services": [
+    {
+      "id": 1,
+      "name": "Portraits",
+      "icon": "fas fa-user-circle",
+      "description": "Séances portrait professionnelles en studio ou en extérieur. Mise en valeur de votre personnalité avec un style unique et intemporel.",
+      "price": "À partir de 200€"
+    },
+    {
+      "id": 2,
+      "name": "Mariages",
+      "icon": "fas fa-heart",
+      "description": "Couverture complète de votre mariage avec un reportage discret et artistique. Immortalisation de chaque émotion de votre jour J.",
+      "price": "À partir de 1200€"
+    },
+    {
+      "id": 3,
+      "name": "Événements",
+      "icon": "fas fa-camera",
+      "description": "Reportage photo pour vos événements d'entreprise, anniversaires, baptêmes. Couverture professionnelle adaptée à chaque occasion.",
+      "price": "À partir de 400€"
+    },
+    {
+      "id": 4,
+      "name": "Famille",
+      "icon": "fas fa-users",
+      "description": "Séances photo famille dans un cadre naturel et détendu. Capture des liens familiaux et des moments de complicité authentiques.",
+      "price": "À partir de 250€"
+    },
+    {
+      "id": 5,
+      "name": "Corporate",
+      "icon": "fas fa-briefcase",
+      "description": "Photos professionnelles pour entreprises, portraits corporate, événements d'entreprise. Valorisation de votre image de marque.",
+      "price": "À partir de 350€"
+    },
+    {
+      "id": 6,
+      "name": "Remise de Diplômes",
+      "icon": "fas fa-graduation-cap",
+      "description": "Immortalisation de ce moment important avec des photos de qualité professionnelle. Souvenirs durables de votre réussite.",
+      "price": "À partir de 180€"
+    }
+  ]
+}

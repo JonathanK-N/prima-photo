@@ -104,9 +104,72 @@
 <section id="services" class="section services">
     <div class="container">
         <h2 class="section-title serif">Mes Services</h2>
-        <div class="services-grid">
-            <div class="services-grid" id="servicesDisplay">
-                <!-- Services will be loaded dynamically -->
+        <div class="services-grid" id="servicesDisplay">
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h3>Portraits</h3>
+                <p>Séances portrait professionnelles en studio ou en extérieur. Mise en valeur de votre personnalité avec un style unique et intemporel.</p>
+                <div class="service-price">À partir de 200€</div>
+                <button class="service-btn" onclick="contactService('Portraits', 'Je souhaite réserver le service Portraits. Pouvez-vous me donner plus d\'informations sur vos disponibilités et tarifs ?')">
+                    Réserver
+                </button>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3>Mariages</h3>
+                <p>Couverture complète de votre mariage avec un reportage discret et artistique. Immortalisation de chaque émotion de votre jour J.</p>
+                <div class="service-price">À partir de 1200€</div>
+                <button class="service-btn" onclick="contactService('Mariages', 'Je souhaite réserver le service Mariages. Pouvez-vous me donner plus d\'informations sur vos disponibilités et tarifs ?')">
+                    Réserver
+                </button>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <h3>Événements</h3>
+                <p>Reportage photo pour vos événements d'entreprise, anniversaires, baptêmes. Couverture professionnelle adaptée à chaque occasion.</p>
+                <div class="service-price">À partir de 400€</div>
+                <button class="service-btn" onclick="contactService('Événements', 'Je souhaite réserver le service Événements. Pouvez-vous me donner plus d\'informations sur vos disponibilités et tarifs ?')">
+                    Réserver
+                </button>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Famille</h3>
+                <p>Séances photo famille dans un cadre naturel et détendu. Capture des liens familiaux et des moments de complicité authentiques.</p>
+                <div class="service-price">À partir de 250€</div>
+                <button class="service-btn" onclick="contactService('Famille', 'Je souhaite réserver le service Famille. Pouvez-vous me donner plus d\'informations sur vos disponibilités et tarifs ?')">
+                    Réserver
+                </button>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h3>Corporate</h3>
+                <p>Photos professionnelles pour entreprises, portraits corporate, événements d'entreprise. Valorisation de votre image de marque.</p>
+                <div class="service-price">À partir de 350€</div>
+                <button class="service-btn" onclick="contactService('Corporate', 'Je souhaite réserver le service Corporate. Pouvez-vous me donner plus d\'informations sur vos disponibilités et tarifs ?')">
+                    Réserver
+                </button>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Remise de Diplômes</h3>
+                <p>Immortalisation de ce moment important avec des photos de qualité professionnelle. Souvenirs durables de votre réussite.</p>
+                <div class="service-price">À partir de 180€</div>
+                <button class="service-btn" onclick="contactService('Remise de Diplômes', 'Je souhaite réserver le service Remise de Diplômes. Pouvez-vous me donner plus d\'informations sur vos disponibilités et tarifs ?')">
+                    Réserver
+                </button>
             </div>
         </div>
     </div>
@@ -242,8 +305,10 @@
 {% block extra_js %}
 <script>
 // Load services from server
-async function loadServicesDisplay() {
-    // Default services if none saved
+function loadServicesDisplay() {
+    console.log('Loading services...');
+    
+    // Default services
     const defaultServices = [
         { id: 1, name: 'Portraits', icon: 'fas fa-user-circle', description: 'Séances portrait professionnelles en studio ou en extérieur. Mise en valeur de votre personnalité avec un style unique et intemporel.', price: 'À partir de 200€' },
         { id: 2, name: 'Mariages', icon: 'fas fa-heart', description: 'Couverture complète de votre mariage avec un reportage discret et artistique. Immortalisation de chaque émotion de votre jour J.', price: 'À partir de 1200€' },
@@ -253,22 +318,29 @@ async function loadServicesDisplay() {
         { id: 6, name: 'Remise de Diplômes', icon: 'fas fa-graduation-cap', description: 'Immortalisation de ce moment important avec des photos de qualité professionnelle. Souvenirs durables de votre réussite.', price: 'À partir de 180€' }
     ];
     
-    let services = defaultServices;
-    
-    // Try to load services from server
-    try {
-        const response = await fetch('/admin/get_services');
-        if (response.ok) {
-            const serverServices = await response.json();
-            if (serverServices && serverServices.length > 0) {
-                services = serverServices;
-            }
-        }
-    } catch (error) {
-        console.log('Using default services:', error);
+    const servicesDisplay = document.getElementById('servicesDisplay');
+    if (!servicesDisplay) {
+        console.error('Services display element not found!');
+        return;
     }
     
+    // Try to load from server first
+    fetch('/admin/get_services')
+        .then(response => response.json())
+        .then(serverServices => {
+            console.log('Server services:', serverServices);
+            const services = (serverServices && serverServices.length > 0) ? serverServices : defaultServices;
+            displayServices(services);
+        })
+        .catch(error => {
+            console.log('Using default services due to error:', error);
+            displayServices(defaultServices);
+        });
+}
+
+function displayServices(services) {
     const servicesDisplay = document.getElementById('servicesDisplay');
+    console.log('Displaying services:', services);
     
     servicesDisplay.innerHTML = services.map(service => `
         <div class="service-card">
@@ -283,10 +355,13 @@ async function loadServicesDisplay() {
             </button>
         </div>
     `).join('');
+    
+    console.log('Services HTML updated');
 }
 
 // Load services on page load
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, loading services...');
     loadServicesDisplay();
 });
 
