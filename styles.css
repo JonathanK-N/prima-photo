@@ -499,6 +499,41 @@ body {
     background: #000;
 }
 
+/* WhatsApp Button */
+.whatsapp-btn {
+    background: #25D366 !important;
+    color: white !important;
+    border: none !important;
+    padding: 15px 30px !important;
+    border-radius: 25px !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+    margin-top: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    transition: background 0.3s ease !important;
+    width: 100% !important;
+    justify-content: center !important;
+    text-decoration: none !important;
+    letter-spacing: 1px !important;
+}
+
+.whatsapp-btn:hover {
+    background: #128C7E !important;
+    transform: translateY(-2px) !important;
+}
+
+.whatsapp-btn i {
+    font-size: 18px !important;
+}
+
+.contact-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
 /* Lightbox */
 .lightbox {
     display: none;

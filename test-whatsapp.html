@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test WhatsApp</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; }
+        button { padding: 10px 20px; margin: 10px; cursor: pointer; }
+        .reserve-btn { background: #333; color: white; border: none; }
+        .whatsapp-btn { background: #25D366; color: white; border: none; }
+    </style>
+</head>
+<body>
+    <h1>Test des fonctions WhatsApp</h1>
+    
+    <div class="test-section">
+        <h2>Configuration du numéro WhatsApp</h2>
+        <input type="text" id="testWhatsapp" placeholder="Numéro WhatsApp (ex: 33123456789)" value="33123456789">
+        <button onclick="setTestWhatsApp()">Configurer</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test des boutons de réservation</h2>
+        <button class="reserve-btn" onclick="reserveService('portrait')">Réserver Portrait</button>
+        <button class="reserve-btn" onclick="reserveService('mariage')">Réserver Mariage</button>
+        <button class="reserve-btn" onclick="reserveService('evenement')">Réserver Événement</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test bouton contact WhatsApp</h2>
+        <button class="whatsapp-btn" onclick="testContactWhatsApp()">Contacter sur WhatsApp</button>
+    </div>
+
+    <script>
+        // Fonction de réservation WhatsApp (copiée du script principal)
+        function reserveService(serviceType) {
+            const contact = JSON.parse(localStorage.getItem('portfolioContact'));
+            let whatsappNumber = contact?.whatsapp;
+            
+            // Fallback: essayer de récupérer depuis les autres sources
+            if (!whatsappNumber) {
+                whatsappNumber = contact?.whatsappNumber;
+            }
+            
+            if (!whatsappNumber) {
+                alert('Numéro WhatsApp non configuré. Veuillez configurer le numéro dans l\'administration.');
+                return;
+            }
+            
+            const serviceNames = {
+                portrait: 'Portrait',
+                mariage: 'Mariage', 
+                evenement: 'Événement'
+            };
+            
+            const serviceName = serviceNames[serviceType] || serviceType;
+            const message = `Bonjour, je souhaite réserver une séance ${serviceName}. Pouvez-vous me donner plus d'informations sur vos disponibilités et tarifs ?`;
+            
+            // Nettoyer le numéro (enlever espaces, + et autres caractères)
+            const cleanNumber = whatsappNumber.replace(/[^0-9]/g, '');
+            
+            const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+        
+        function testContactWhatsApp() {
+            const contact = JSON.parse(localStorage.getItem('portfolioContact'));
+            let whatsappNumber = contact?.whatsapp || contact?.whatsappNumber;
+            
+            if (!whatsappNumber) {
+                alert('Numéro WhatsApp non configuré.');
+                return;
+            }
+            
+            const cleanNumber = whatsappNumber.replace(/[^0-9]/g, '');
+            const message = "Bonjour, je souhaite obtenir plus d'informations sur vos services de photographie.";
+            const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+        
+        function setTestWhatsApp() {
+            const number = document.getElementById('testWhatsapp').value;
+            const contact = {
+                whatsapp: number,
+                email: "test@example.com",
+                phone: "+33 1 23 45 67 89",
+                address: "Paris, France"
+            };
+            localStorage.setItem('portfolioContact', JSON.stringify(contact));
+            alert('Numéro WhatsApp configuré : ' + number);
+        }
+        
+        // Afficher la configuration actuelle
+        window.onload = function() {
+            const contact = JSON.parse(localStorage.getItem('portfolioContact'));
+            if (contact && contact.whatsapp) {
+                document.getElementById('testWhatsapp').value = contact.whatsapp;
+            }
+        }
+    </script>
+</body>
+</html>

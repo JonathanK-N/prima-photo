@@ -359,6 +359,13 @@ function loadStoredContent() {
         if (contactItems[1] && contact.phone) contactItems[1].textContent = contact.phone;
         if (contactItems[2] && contact.address) contactItems[2].textContent = contact.address;
         
+        // Ajouter un bouton WhatsApp si configuré
+        if (contact.whatsapp || contact.whatsappNumber) {
+            setTimeout(() => {
+                addWhatsAppButton(contact.whatsapp || contact.whatsappNumber);
+            }, 100);
+        }
+        
         if (contactForm && contact.formPlaceholders) {
             const nameInput = contactForm.querySelector('input[type="text"]');
             const emailInput = contactForm.querySelector('input[type="email"]');
@@ -440,6 +447,11 @@ async function loadDataFromAPI() {
             if (contactItems[0] && data.contact.email) contactItems[0].textContent = data.contact.email;
             if (contactItems[1] && data.contact.phone) contactItems[1].textContent = data.contact.phone;
             if (contactItems[2] && data.contact.address) contactItems[2].textContent = data.contact.address;
+            
+            // Ajouter bouton WhatsApp si configuré
+            if (data.contact.whatsapp || data.contact.whatsappNumber) {
+                addWhatsAppButton(data.contact.whatsapp || data.contact.whatsappNumber);
+            }
         }
         
         console.log('Données API chargées');
@@ -473,10 +485,15 @@ window.addEventListener('storage', function(e) {
 // Fonction de réservation WhatsApp
 function reserveService(serviceType) {
     const contact = JSON.parse(localStorage.getItem('portfolioContact'));
-    const whatsappNumber = contact?.whatsapp;
+    let whatsappNumber = contact?.whatsapp;
+    
+    // Fallback: essayer de récupérer depuis les autres sources
+    if (!whatsappNumber) {
+        whatsappNumber = contact?.whatsappNumber;
+    }
     
     if (!whatsappNumber) {
-        alert('Numéro WhatsApp non configuré. Contactez l\'administrateur.');
+        alert('Numéro WhatsApp non configuré. Veuillez configurer le numéro dans l\'administration.');
         return;
     }
     
@@ -489,7 +506,10 @@ function reserveService(serviceType) {
     const serviceName = serviceNames[serviceType] || serviceType;
     const message = `Bonjour, je souhaite réserver une séance ${serviceName}. Pouvez-vous me donner plus d'informations sur vos disponibilités et tarifs ?`;
     
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    // Nettoyer le numéro (enlever espaces, + et autres caractères)
+    const cleanNumber = whatsappNumber.replace(/[^0-9]/g, '');
+    
+    const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 }
 
@@ -554,3 +574,52 @@ window.addEventListener('focus', forceSync);
 
 // Synchronisation sur changement de localStorage
 window.addEventListener('storage', forceSync);
+
+// Fonction pour ajouter le bouton WhatsApp
+function addWhatsAppButton(whatsappNumber) {
+    const contactActions = document.querySelector('.contact-actions');
+    if (!contactActions) return;
+    
+    // Vérifier si le bouton existe déjà
+    if (document.querySelector('.whatsapp-btn')) {
+        document.querySelector('.whatsapp-btn').remove();
+    }
+    
+    const cleanNumber = whatsappNumber.replace(/[^0-9]/g, '');
+    const message = "Bonjour, je souhaite obtenir plus d'informations sur vos services de photographie.";
+    const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
+    
+    const whatsappBtn = document.createElement('button');
+    whatsappBtn.className = 'whatsapp-btn';
+    whatsappBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Contacter sur WhatsApp';
+    whatsappBtn.style.cssText = `
+        background: #25D366;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 25px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.3s ease;
+        width: 100%;
+        justify-content: center;
+    `;
+    
+    whatsappBtn.addEventListener('mouseover', () => {
+        whatsappBtn.style.background = '#128C7E';
+    });
+    
+    whatsappBtn.addEventListener('mouseout', () => {
+        whatsappBtn.style.background = '#25D366';
+    });
+    
+    whatsappBtn.addEventListener('click', () => {
+        window.open(whatsappUrl, '_blank');
+    });
+    
+    contactActions.appendChild(whatsappBtn);
+}
