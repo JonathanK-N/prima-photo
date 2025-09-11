@@ -32,9 +32,11 @@
   },
   "contact": {
     "email": "photo@exemple.com",
-    "phone": "+33 6 12 34 56 78",
+
+    "phone": "+1 819 674 5823",
     "address": "Paris, France",
-    "whatsapp": "33612345678"
+    "whatsapp": "18196745823"
+    
   },
   "photos": []
 }
