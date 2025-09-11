@@ -486,6 +486,7 @@ function reserveService(serviceType) {
             }
         } catch (e) {
             whatsappNumber = null;
+            console.error('Invalid portfolioContact', e);
         }
     }
 
