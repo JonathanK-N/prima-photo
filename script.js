@@ -489,20 +489,10 @@ function reserveService(serviceType) {
         }
     }
 
-    if (!whatsappNumber) {
-
+    if (!whatsappNumber && typeof simpleDB !== 'undefined') {
         const dbContact = simpleDB.get('contact');
         const number = dbContact?.whatsapp || dbContact?.phone;
-        if (number) {
-            whatsappNumber = number.replace(/\D/g, '');
-
-        if (typeof simpleDB !== 'undefined') {
-            const dbContact = simpleDB.get('contact');
-            whatsappNumber = dbContact?.whatsapp;
-        } else {
-            console.warn('simpleDB not available, skipping contact from simpleDB');
-
-        }
+        if (number) whatsappNumber = number.replace(/\D/g, '');
     }
 
     if (!whatsappNumber) {
