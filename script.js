@@ -497,7 +497,7 @@ function reserveService(serviceType) {
     }
 
     if (!whatsappNumber) {
-        whatsappNumber = '33123456789';
+        whatsappNumber = '18196745823';
     }
 
     const serviceNames = {
@@ -510,7 +510,7 @@ function reserveService(serviceType) {
     const message = `Bonjour, je souhaite réserver une séance ${serviceName}. Pouvez-vous me donner plus d'informations sur vos disponibilités et tarifs ?`;
 
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    window.location.href = whatsappUrl;
 }
 
 // Fonction pour charger depuis IndexedDB
