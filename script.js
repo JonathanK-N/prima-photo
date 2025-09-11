@@ -490,10 +490,18 @@ function reserveService(serviceType) {
     }
 
     if (!whatsappNumber) {
+
         const dbContact = simpleDB.get('contact');
         const number = dbContact?.whatsapp || dbContact?.phone;
         if (number) {
             whatsappNumber = number.replace(/\D/g, '');
+
+        if (typeof simpleDB !== 'undefined') {
+            const dbContact = simpleDB.get('contact');
+            whatsappNumber = dbContact?.whatsapp;
+        } else {
+            console.warn('simpleDB not available, skipping contact from simpleDB');
+
         }
     }
 
