@@ -480,34 +480,44 @@ function reserveService(serviceType) {
     if (storedContactRaw) {
         try {
             const storedContact = JSON.parse(storedContactRaw);
-            whatsappNumber = storedContact?.whatsapp;
+            const number = storedContact?.whatsapp || storedContact?.phone;
+            if (number) {
+                whatsappNumber = number.replace(/\D/g, '');
+            }
         } catch (e) {
             whatsappNumber = null;
         }
     }
 
     if (!whatsappNumber) {
+
+        const dbContact = simpleDB.get('contact');
+        const number = dbContact?.whatsapp || dbContact?.phone;
+        if (number) {
+            whatsappNumber = number.replace(/\D/g, '');
+
         if (typeof simpleDB !== 'undefined') {
             const dbContact = simpleDB.get('contact');
             whatsappNumber = dbContact?.whatsapp;
         } else {
             console.warn('simpleDB not available, skipping contact from simpleDB');
+
         }
     }
 
     if (!whatsappNumber) {
         whatsappNumber = '33123456789';
     }
-    
+
     const serviceNames = {
         portrait: 'Portrait',
-        mariage: 'Mariage', 
+        mariage: 'Mariage',
         evenement: 'Événement'
     };
-    
+
     const serviceName = serviceNames[serviceType] || serviceType;
     const message = `Bonjour, je souhaite réserver une séance ${serviceName}. Pouvez-vous me donner plus d'informations sur vos disponibilités et tarifs ?`;
-    
+
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 }
