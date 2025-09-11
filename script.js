@@ -487,8 +487,12 @@ function reserveService(serviceType) {
     }
 
     if (!whatsappNumber) {
-        const dbContact = simpleDB.get('contact');
-        whatsappNumber = dbContact?.whatsapp;
+        if (typeof simpleDB !== 'undefined') {
+            const dbContact = simpleDB.get('contact');
+            whatsappNumber = dbContact?.whatsapp;
+        } else {
+            console.warn('simpleDB not available, skipping contact from simpleDB');
+        }
     }
 
     if (!whatsappNumber) {
