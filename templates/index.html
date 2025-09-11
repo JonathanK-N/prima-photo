@@ -148,13 +148,6 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     });
 });
 
-// Réservation WhatsApp
-function reserveService(service) {
-    const message = `Bonjour, je souhaite réserver une séance ${service}. Pouvez-vous me donner plus d'informations ?`;
-    const whatsappUrl = `https://wa.me/15141234567?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-}
-
 // Formulaire contact
 function sendMessage(event) {
     event.preventDefault();
