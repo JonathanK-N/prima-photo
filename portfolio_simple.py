@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_from_directory
 import json
 import os
 import base64
@@ -145,6 +145,11 @@ def get_services():
 def debug_page():
     with open('debug.html', 'r', encoding='utf-8') as f:
         return f.read()
+
+# Serve static files from project root
+@app.route('/<path:filename>')
+def static_files(filename):
+    return send_from_directory('.', filename)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

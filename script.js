@@ -387,6 +387,9 @@ async function loadDataFromAPI() {
         const about = await portfolioAPI.getData('about');
         const services = await portfolioAPI.getData('services');
         const contact = await portfolioAPI.getData('contact');
+        if (contact) {
+            localStorage.setItem('portfolioContact', JSON.stringify(contact));
+        }
         const photos = await portfolioAPI.getPhotos();
         
         const data = { hero, about, services, contact, photos };
@@ -484,33 +487,42 @@ window.addEventListener('storage', function(e) {
 
 // Fonction de réservation WhatsApp
 function reserveService(serviceType) {
-    const contact = JSON.parse(localStorage.getItem('portfolioContact'));
-    let whatsappNumber = contact?.whatsapp;
-    
-    // Fallback: essayer de récupérer depuis les autres sources
-    if (!whatsappNumber) {
-        whatsappNumber = contact?.whatsappNumber;
+    let whatsappNumber = null;
+    const storedContactRaw = localStorage.getItem('portfolioContact');
+    if (storedContactRaw) {
+        try {
+            const storedContact = JSON.parse(storedContactRaw);
+            const number = storedContact?.whatsapp || storedContact?.phone;
+            if (number) {
+                whatsappNumber = number.replace(/\D/g, '');
+            }
+        } catch (e) {
+            whatsappNumber = null;
+            console.error('Invalid portfolioContact', e);
+        }
     }
-    
-    if (!whatsappNumber) {
-        alert('Numéro WhatsApp non configuré. Veuillez configurer le numéro dans l\'administration.');
-        return;
+
+    if (!whatsappNumber && typeof simpleDB !== 'undefined') {
+        const dbContact = simpleDB.get('contact');
+        const number = dbContact?.whatsapp || dbContact?.phone;
+        if (number) whatsappNumber = number.replace(/\D/g, '');
     }
-    
+
+    if (!whatsappNumber) {
+        whatsappNumber = '18196745823';
+    }
+
     const serviceNames = {
         portrait: 'Portrait',
-        mariage: 'Mariage', 
+        mariage: 'Mariage',
         evenement: 'Événement'
     };
-    
+
     const serviceName = serviceNames[serviceType] || serviceType;
     const message = `Bonjour, je souhaite réserver une séance ${serviceName}. Pouvez-vous me donner plus d'informations sur vos disponibilités et tarifs ?`;
-    
-    // Nettoyer le numéro (enlever espaces, + et autres caractères)
-    const cleanNumber = whatsappNumber.replace(/[^0-9]/g, '');
-    
-    const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.location.href = whatsappUrl;
 }
 
 // Fonction pour charger depuis IndexedDB

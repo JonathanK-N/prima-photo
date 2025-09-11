@@ -67,10 +67,12 @@
         }
     </style>
     {% block extra_css %}{% endblock %}
+    <script src="/firebase-config.js"></script>
 </head>
 <body>
     {% block content %}{% endblock %}
     
+    <script src="/script.js"></script>
     <script>
         // Navigation fluide
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
