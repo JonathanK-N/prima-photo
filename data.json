@@ -6,28 +6,25 @@
   },
   "about": {
     "sectionTitle": "À propos",
-    "para1": "Passionné de photographie depuis plus de 10 ans, je capture vos moments les plus précieux avec un œil artistique et une approche professionnelle.",
+    "para1": "Passionné de photographie, je capture vos moments les plus précieux avec un œil artistique et une approche professionnelle.",
     "stats": {
-      "clients": "500",
+      "clients": "100",
       "clientsLabel": "Clients",
-      "mariages": "100", 
+      "mariages": "10", 
       "mariagesLabel": "Mariages",
-      "experience": "10",
+      "experience": "3",
       "experienceLabel": "Années"
     }
   },
   "services": {
     "portrait": {
-      "description": "Séances photo portrait en studio ou extérieur",
-      "price": "À partir de 150€"
+      "description": "Séances photo portrait en studio ou extérieur"
     },
     "mariage": {
-      "description": "Couverture complète de votre jour J",
-      "price": "À partir de 800€"
+      "description": "Couverture complète de votre jour J"
     },
     "evenement": {
-      "description": "Reportage photo pour tous vos événements", 
-      "price": "À partir de 300€"
+      "description": "Reportage photo pour tous vos événements"
     }
   },
   "contact": {
