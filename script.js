@@ -4,7 +4,7 @@ if (!localStorage.getItem('portfolioContact')) {
         whatsapp: '18196745823',
         email: 'photo@exemple.com',
         phone: '+1 819 674 5823',
-        address: 'Paris, France'
+        address: 'Sherbrooke, Québec, Canada'
     };
     localStorage.setItem('portfolioContact', JSON.stringify(testContact));
 }
